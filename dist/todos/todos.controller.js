@@ -25,6 +25,9 @@ exports.TodosController = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard/jwt-auth.guard");
 const todos_service_1 = require("./todos.service");
+const create_dto_1 = require("./dto/create.dto");
+const update_dto_1 = require("./dto/update.dto");
+const swagger_1 = require("@nestjs/swagger");
 let TodosController = class TodosController {
     constructor(todosService) {
         this.todosService = todosService;
@@ -46,7 +49,7 @@ let TodosController = class TodosController {
     }
     delete(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.todosService.delete(+id);
+            yield this.todosService.delete(+id);
         });
     }
 };
@@ -57,7 +60,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [create_dto_1.CreateTodoDto, Object]),
     __metadata("design:returntype", Promise)
 ], TodosController.prototype, "create", null);
 __decorate([
@@ -74,7 +77,7 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String, update_dto_1.UpdateTodoDto]),
     __metadata("design:returntype", Promise)
 ], TodosController.prototype, "update", null);
 __decorate([
@@ -86,6 +89,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], TodosController.prototype, "delete", null);
 exports.TodosController = TodosController = __decorate([
+    (0, swagger_1.ApiTags)('todos'),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Controller)('todos'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __metadata("design:paramtypes", [todos_service_1.TodosService])

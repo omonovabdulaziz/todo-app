@@ -69,14 +69,32 @@ let AuthService = class AuthService {
                 const { password } = user, result = __rest(user, ["password"]);
                 return result;
             }
-            return null;
+            throw new common_1.UnauthorizedException('Password or email incorrect');
         });
     }
-    login(user) {
+    login(email, password) {
         return __awaiter(this, void 0, void 0, function* () {
+            const user = yield this.validateUser(email, password);
             const payload = { email: user.email, sub: user.id };
             return {
-                access_token: this.jwtService.sign(payload)
+                access_token: this.jwtService.sign(payload),
+            };
+        });
+    }
+    register(email, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const existingUser = yield this.userService.findByEmail(email);
+            if (existingUser) {
+                throw new common_1.ConflictException('User already exists');
+            }
+            const hashedPassword = yield bcrypt.hash(password, 10);
+            const newUser = yield this.userService.create(email, hashedPassword);
+            const payload = { email: newUser.email, sub: newUser.id };
+            const token = this.jwtService.sign(payload);
+            return {
+                id: newUser.id,
+                email: newUser.email,
+                access_token: token,
             };
         });
     }

@@ -1,38 +1,43 @@
 import {
+    Body,
     Controller,
+    Delete,
     Get,
+    HttpCode,
+    HttpStatus,
+    Param,
     Post,
     Put,
-    Delete,
-    Body,
-    Param,
-    UseGuards,
     Request,
-    HttpCode,
-    HttpStatus
+    UseGuards
 } from '@nestjs/common';
 import {JwtAuthGuard} from '../auth/jwt-auth.guard/jwt-auth.guard';
 import {TodosService} from './todos.service';
 import {CustomRequest} from '../types/custom-request';
+import {CreateTodoDto} from './dto/create.dto';
+import {UpdateTodoDto} from './dto/update.dto';
+import {Todo} from '../types/todo';
+import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 
+@ApiTags('todos')
+@ApiBearerAuth()
 @Controller('todos')
 @UseGuards(JwtAuthGuard)
 export class TodosController {
-    constructor(private readonly todosService: TodosService) {
-    }
+    constructor(private readonly todosService: TodosService) {}
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
     async create(
-        @Body() createTodoDto: { title: string; description?: string },
+        @Body() createTodoDto: CreateTodoDto,
         @Request() req: CustomRequest
-    ): Promise<any> {
-        return this.todosService.create({...createTodoDto, userId: req.user.id});
+    ): Promise<Todo> { // Specify the return type
+        return this.todosService.create({ ...createTodoDto, userId: req.user.id });
     }
 
     @Get()
     @HttpCode(HttpStatus.OK)
-    async findAll(@Request() req: CustomRequest): Promise<any> {
+    async findAll(@Request() req: CustomRequest): Promise<Todo[]> { // Specify the return type
         return this.todosService.findAll(req.user.id);
     }
 
@@ -40,14 +45,14 @@ export class TodosController {
     @HttpCode(HttpStatus.OK)
     async update(
         @Param('id') id: string,
-        @Body() updateTodoDto: { title?: string; description?: string; completed?: boolean }
-    ): Promise<any> {
+        @Body() updateTodoDto: UpdateTodoDto
+    ): Promise<Todo> { // Specify the return type
         return this.todosService.update(+id, updateTodoDto);
     }
 
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(@Param('id') id: string): Promise<any> {
-        return this.todosService.delete(+id);
+    async delete(@Param('id') id: string): Promise<void> { // Specify the return type
+        await this.todosService.delete(+id);
     }
 }
