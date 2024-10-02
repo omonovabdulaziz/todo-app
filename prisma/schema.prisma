@@ -6,18 +6,26 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+model Sessions {
+    id          Int      @id @default(autoincrement())
+    userId      Int
+    deviceName  String
+    startedAt   DateTime @default(now())
+    user        User     @relation(fields: [userId], references: [id])
+}
 
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
-  password String
-  todos    Todo[]
+    id       Int      @id @default(autoincrement())
+    email    String   @unique
+    password String
+    todos    Todo[]
+    sessions Sessions[] // Add this line to create a relation with sessions
 }
 
 model Todo {
-  id       Int      @id @default(autoincrement())
-  title    String
-  completed Boolean @default(false)
-  userId   Int
-  user     User     @relation(fields: [userId], references: [id])
+    id       Int      @id @default(autoincrement())
+    title    String
+    completed Boolean @default(false)
+    userId   Int
+    user     User     @relation(fields: [userId], references: [id])
 }

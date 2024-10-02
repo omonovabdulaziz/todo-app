@@ -23,11 +23,3 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateTodoDto.prototype, "title", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({
-        description: 'description',
-        example: 'description'
-    }),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], CreateTodoDto.prototype, "description", void 0);

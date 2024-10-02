@@ -28,13 +28,14 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         super({
             jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            secretOrKey: process.env.JWT_SECRET,
+            secretOrKey: process.env.JWT_SECRET, // Ensure this environment variable is set
         });
         this.usersService = usersService;
     }
     validate(payload) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.usersService.findByEmail(payload.email);
+            // Assuming the payload contains an email property
+            return this.usersService.findByEmail(payload.email); // Make sure this method returns a user or null
         });
     }
 };

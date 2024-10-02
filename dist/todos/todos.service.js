@@ -27,7 +27,21 @@ let TodosService = class TodosService {
     }
     create(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.prisma.todo.create({ data });
+            if (!data.title) {
+                throw new common_1.BadRequestException('Title is required and must be a string.');
+            }
+            const user = yield this.prisma.user.findUnique({
+                where: { id: data.userId },
+            });
+            if (!user) {
+                throw new common_1.NotFoundException(`User with ID ${data.userId} not found.`);
+            }
+            return this.prisma.todo.create({
+                data: {
+                    title: data.title,
+                    userId: data.userId,
+                },
+            });
         });
     }
     findAll(userId) {

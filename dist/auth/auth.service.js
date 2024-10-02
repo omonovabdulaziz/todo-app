@@ -65,11 +65,14 @@ let AuthService = class AuthService {
     validateUser(email, password) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield this.userService.findByEmail(email);
-            if (user && (yield bcrypt.compare(password, user.password))) {
-                const { password } = user, result = __rest(user, ["password"]);
-                return result;
+            console.log(user);
+            const isPasswordValid = user && (yield bcrypt.compare(password, user.password));
+            console.log(isPasswordValid);
+            if (isPasswordValid) {
+                const { password } = user, result = __rest(user, ["password"]); // Exclude the password from the result
+                return result; // Return the user details without the password
             }
-            throw new common_1.UnauthorizedException('Password or email incorrect');
+            throw new common_1.UnauthorizedException('Password or email incorrect'); // Throw an exception if the password is incorrect
         });
     }
     login(email, password) {
