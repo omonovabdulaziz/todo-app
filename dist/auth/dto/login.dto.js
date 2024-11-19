@@ -11,8 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
-class LoginDto {
-}
+class LoginDto {}
 exports.LoginDto = LoginDto;
 __decorate([
     (0, swagger_1.ApiProperty)({
